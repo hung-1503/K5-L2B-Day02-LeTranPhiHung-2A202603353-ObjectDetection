@@ -15,10 +15,19 @@
 
 Dẫn tới [GUIDELINE_MINI.md](../../GUIDELINE_MINI.md). Tóm tắt ba ca mơ hồ đã quyết định, cách áp dụng schema và phần cần giảng viên làm rõ.
 
+**Cách áp dụng schema:** dùng đúng 4 lớp `car`, `truck`, `bus`, `van`, phân biệt theo hình dạng thân xe: `car` thấp, nóc ngắn; `van` thân liền, trần cao, đuôi vuông; `truck` có thùng tách khỏi cabin; `bus` dài, hàng cửa sổ liên tục. Box bám mép phần thân xe nhìn thấy. Xe bị che hoặc cắt khung vẫn gán nếu nhận ra lớp. Xe quá nhỏ hoặc mờ thì bỏ. Người, xe đạp, mô tô không gán.
+
+**Ba ca mơ hồ đã quyết định:**
+- `drive_021`: minivan bạc dễ nhầm với `car` → gán `van` (thân liền, trần cao, đuôi vuông).
+- `drive_047`: xe van bạc bị cắt ở rìa trái, còn khoảng 2/3 thân → gán `van`, box chạm rìa.
+- `drive_050`: xe buýt đỏ bị cắt ở đáy ảnh, kèm nhiều xe nhỏ phía xa → gán `bus`, box chạm rìa dưới; xe xa chỉ gán khi phân biệt được loại.
+
+**Cần giảng viên làm rõ:** schema không nêu ngưỡng cụ thể nên mình tự đặt (xe rộng khoảng 10 px trở lên mới gán, phần nhìn thấy dưới khoảng 15% thì bỏ); ranh giới `van` và `bus` với minibus.
+
 ## 3. Annotation và self-QC
 
 - Số file nhãn train: 50 file, từ `drive_001.txt` đến `drive_050.txt`
-- Kết quả checker: Chạy `tools/check_yolo_labels.py` đạt **50/50 file nhãn hợp lệ** về cấu trúc. Lỗi cấu trúc đã xử lý: chuẩn hóa lại định dạng YOLO, kiểm tra tọa độ nằm trong khoảng 0–1, loại bỏ dòng trống / dòng thừa.
+- Kết quả checker: Chạy `tools/check_yolo_labels.py` đạt **50/50 file nhãn hợp lệ** về cấu trúc, không phát hiện lỗi cấu trúc YOLO.
 - Danh sách ít nhất 10 ảnh đã rà bằng mắt: `drive_041`, `drive_027`, `drive_031`, `drive_038`, `drive_045`, `drive_007`, `drive_036`, `drive_037`, `drive_019`, `drive_026`
 - Lỗi bỏ sót / box / class phát hiện khi rà và cách sửa:
   - **Bỏ sót (FN):** Hay sót vật nhỏ, vật ở xa, vật ở rìa ảnh và vật bị che một phần. Cách sửa: zoom ảnh khi rà, kiểm tra kỹ 4 góc và rìa ảnh trước khi chốt.
@@ -93,7 +102,7 @@ Trả lời bốn câu hỏi cuối notebook:
 
 - **Schema và mini guideline:** Đã có. Đã viết guideline, đã nêu 3 ca mơ hồ và phần cần giảng viên làm rõ.
 - **Annotation và self-QC:** Đã có. Đủ 50 file nhãn, checker đạt 50/50 về cấu trúc, đã rà ít nhất 10 ảnh bằng mắt.
-- **Gold QC và rework:** Đã có, nhưng **chưa đạt**. F1 sau rework là 0.5365, chưa đạt yêu cầu 0.8. Mean IoU đã đạt.
+- **Gold QC và rework:** Đã có, nhưng **chưa đạt**. F1 sau rework là 0.5915, chưa đạt yêu cầu 0.8. Mean IoU đã đạt.
 - **Kết quả YOLO:** Đã có. Đã chạy train, đã có best checkpoint, đã có đủ 4 chỉ số Precision, Recall, mAP50, mAP50–95 trên 10 ảnh eval và đã trả lời 4 câu hỏi cuối notebook.
 - **Báo cáo và assets:** Đã dẫn link repo, link Colab, file `outputs/annotation_evaluation.json`, folder `assets/eval_predictions/` và `assets/yolo26_runs/`.
 - **Phần còn thiếu:** Cần rework thêm nhãn để F1 vượt 0.8, sau đó train lại YOLO để kiểm tra mAP có cải thiện hay không.
